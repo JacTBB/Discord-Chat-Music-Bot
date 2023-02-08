@@ -117,7 +117,7 @@ client.on('messageCreate', async (message) => {
 			if (message.guild === null) return message.channel.send({ embeds: [ErrorEmbed] }).catch(console.error)
 			if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				(async () => {
-					const queue = player.getQueue(message.guildId)
+					const queue = await player.getQueue(message.guildId)
 
 					if (!queue || !queue.playing) return message.reply({ content:`No music currently playing.` })
 
@@ -142,7 +142,7 @@ client.on('messageCreate', async (message) => {
 			if (message.guild === null) return message.channel.send({ embeds: [ErrorEmbed] }).catch(console.error)
 			if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 				(async () => {
-					const queue = player.getQueue(message.guildId)
+					const queue = await player.getQueue(message.guildId)
 
 					if (!queue || !queue.playing) return message.reply({ content:`No music currently playing.` })
 
