@@ -24,7 +24,7 @@ const client = new Client({
         Partials.Reaction
     ]
 })
-const { Player, QueryType } = require('discord-player');
+const { Player, QueryType, QueueRepeatMode } = require('discord-player');
 require('dotenv').config()
 const prefix = "...";
 
@@ -101,6 +101,31 @@ client.on('messageCreate', async (message) => {
 					res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0])
 
 					if (!queue.playing) await queue.play();
+				})()
+			}
+			else {
+				const Embed = new Discord.EmbedBuilder()
+				.setTitle('Unauthorized')
+				.setColor(Colors.Blue)
+				.setFooter({ text: 'Seward Whitelist System' })
+				.setTimestamp()
+				message.reply({ embeds: [Embed] }).catch(console.error)
+			}
+		}
+
+		if (command === 'loop') {
+			if (message.guild === null) return message.channel.send({ embeds: [ErrorEmbed] }).catch(console.error)
+			if (message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				(async () => {
+					const queue = player.getQueue(message.guildId)
+
+					if (!queue || !queue.playing) return message.reply({ content:`No music currently playing.` })
+
+					if (queue.repeatMode === 2) return message.reply({ content:`You must first disable the current music in the loop mode.` });
+
+					const success = queue.setRepeatMode( QueueRepeatMode.TRACK );
+					
+					return message.reply({ content: `Repeat mode **enabled** the current song will be repeated endlessly (you can end the loop with /loop disable)` });
 				})()
 			}
 			else {
